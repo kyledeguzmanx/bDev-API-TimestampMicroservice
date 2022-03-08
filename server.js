@@ -33,20 +33,31 @@ app.get("/api/hello", function (req, res) {
 //given date endpoint
 app.get("/api/:date?", function (request, response) {
   let dateArray = request.params.date.split("-");
-  let date = new Date(dateArray[0], dateArray[1]-1, dateArray[2]);
-  //date = new Date(2015, 12, 10);
-  dateArray.length = 0;
-  dateArray = date.toString().split("+");
-  dateArray = dateArray[0].split(" ");
-  console.log(dateArray);
-  console.log(`${dateArray[0]}, ${dateArray[2]} ${dateArray[1]} ${dateArray[3]} ${dateArray[4]} ${dateArray[5]}`)
+  let date_string = [dateArray[0], dateArray[1], dateArray[2]].join(" ");
   
-  response.json({
-    "unix" : date.getTime(),
-    "utc" : `${dateArray[0]}, ${dateArray[2]} ${dateArray[1]} ${dateArray[3]} ${dateArray[4]} ${dateArray[5]}`
-  })
+  let date = new Date(date_string);
+
+  if(date ==  "Invalid Date"){
+    response.json({
+      error : "Invalid Date" 
+    })
+  }
+  else{
+    //date = new Date(2015, 12, 10);
+    dateArray.length = 0;
+    dateArray = date.toString().split("+");
+    dateArray = dateArray[0].split(" ");
+    //console.log(dateArray);
+    //console.log(`${dateArray[0]}, ${dateArray[2]} ${dateArray[1]} ${dateArray[3]} ${dateArray[4]} ${dateArray[5]}`)
+  
+    response.json({
+      "unix" : date.getTime(),
+      "utc" : `${dateArray[0]}, ${dateArray[2]} ${dateArray[1]} ${dateArray[3]} ${dateArray[4]} ${dateArray[5]}`
+    })
+  }
   
 });
+
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
